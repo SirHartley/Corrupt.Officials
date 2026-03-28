@@ -1,2 +1,2 @@
 fieldID,fieldName,fieldType,defaultValue,secondaryValue,minValue,maxValue,fieldDescription,tab
-corruptofficials_cutoff,Income Cutoff,Int,5000,,500,100000,Monthly colony income above this threshold is subject to corruption penalties.,General
+corruptofficials_cutoff,Income Cutoff,Int,40000,,500,100000,Monthly colony income above this threshold is subject to corruption penalties.,General

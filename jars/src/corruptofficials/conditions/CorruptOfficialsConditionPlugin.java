@@ -14,7 +14,6 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
     public void apply(String id) {
         super.apply(id);
         applyCorruption();
-
     }
 
     public void applyCorruption() {
