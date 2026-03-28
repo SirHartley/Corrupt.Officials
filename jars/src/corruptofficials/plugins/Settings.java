@@ -3,6 +3,7 @@ package corruptofficials.plugins;
 public enum Settings {
 
     CORRUPTION_CUTOFF("corruptofficials_cutoff", FieldType.INT),
+    CORRUPTION_ENABLED("corrputofficials_enabled", FieldType.BOOLEAN),
     CORRUPTION_POW("corruptofficials_pow", FieldType.DOUBLE);
 
     public enum FieldType { INT, DOUBLE, STRING, BOOLEAN }

@@ -18,6 +18,8 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
     }
 
     public void applyCorruption() {
+        if (!SettingsListener.getBoolean(Settings.CORRUPTION_ENABLED)) return; //turned off? Leave
+
         market.getIndustry(Industries.POPULATION).getIncome().unmodify(getModId());
 
         float income = market.getNetIncome();
@@ -39,7 +41,6 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
                 + "\ngross income " + market.getGrossIncome()
                 + "\nmaxIncomeBeforePenalty: " + maxIncomeBeforePenalty
                 + "\nincomeAboveCutoff: " + incomeAboveCutoff
-                //+ "\nold penalty: " + currentPenalty
                 + "\nnew penalty: " + penalty
                 + "\ntarget income: " + targetIncome
                 + "\npercent income above cutoff that should not exist: " + reduction);
