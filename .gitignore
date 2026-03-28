@@ -1,6 +1,3 @@
 # Project exclude paths
 /jars/production/
 /jars/src.jar
-
-# Project exclude paths
-/jars/
