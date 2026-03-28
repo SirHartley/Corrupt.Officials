@@ -8,11 +8,16 @@ import lunalib.lunaSettings.LunaSettings;
 
 public class ModPlugin extends BaseModPlugin {
 
+    public static void log(String Text) {
+        if (Global.getSettings().isDevMode()) Global.getLogger(ModPlugin.class).info(Text);
+    }
+
     @Override
     public void onApplicationLoad() throws Exception {
         if (Global.getSettings().getModManager().isModEnabled("lunalib")) {
             LunaSettings.addSettingsListener(new SettingsListener());
         }
+
         SettingsListener.loadSettings();
     }
 
