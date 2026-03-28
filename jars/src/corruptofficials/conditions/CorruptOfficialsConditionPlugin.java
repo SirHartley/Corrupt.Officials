@@ -1,7 +1,9 @@
 package corruptofficials.conditions;
 
+import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.econ.BaseMarketConditionPlugin;
+import com.fs.starfarer.api.impl.campaign.econ.impl.PopulationAndInfrastructure;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import corruptofficials.plugins.ModPlugin;
 import corruptofficials.plugins.Settings;
@@ -20,7 +22,10 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
     public void applyCorruption() {
         if (!SettingsListener.getBoolean(Settings.CORRUPTION_ENABLED)) return; //turned off? Leave
 
-        market.getIndustry(Industries.POPULATION).getIncome().unmodify(getModId());
+        Industry population = getPopulation();
+        if (population == null) return;
+
+        population.getIncome().unmodify(getModId());
 
         float income = market.getNetIncome();
         float maxIncomeBeforePenalty = SettingsListener.getInt(Settings.CORRUPTION_CUTOFF);
@@ -46,7 +51,7 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
                 + "\npercent income above cutoff that should not exist: " + reduction);
 
         //flat industry income of industries gets reduced by total income mult so we can't use that for corruption or it'll always be in excess
-        market.getIndustry(Industries.POPULATION).getIncome().modifyFlatAlways(getModId(), -actualReductionAbs, "Government Corruption");
+        population.getIncome().modifyFlatAlways(getModId(), -actualReductionAbs, "Government Corruption");
     }
 
     @Override
@@ -54,7 +59,9 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
         super.unapply(id);
         market.getIncomeMult().unmodify(getModId());
         market.getIncomeMult().unmodify(getModId() + "_corruption");
-        market.getIndustry(Industries.POPULATION).getIncome().unmodify(getModId());
+
+        Industry population = getPopulation();
+        if (population != null) market.getIndustry(Industries.POPULATION).getIncome().unmodify(getModId());
     }
 
     @Override
@@ -68,5 +75,18 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
 
     public static void applyConditionToMarket(MarketAPI m) {
         if (m.isInEconomy() && !m.hasCondition(ID)) m.addCondition(ID);
+    }
+
+    public Industry getPopulation(){
+        Industry population = market.getIndustry(Industries.POPULATION);
+
+        if (population == null){
+            for (Industry ind : market.getIndustries()) if (ind instanceof PopulationAndInfrastructure) {
+                population = ind;
+                break;
+            }
+        }
+
+        return population;
     }
 }

@@ -1,2 +1,5 @@
+1.0.b
+Fixed - Crash if, for whatever reason, a colony does not have population and infrastructure
+
 1.0.a
 Added - Initial Release
