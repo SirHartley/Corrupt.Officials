@@ -1,0 +1,10 @@
+{
+    "id": "corruptofficials",
+    "name": "Corrupt.Officials",
+    "author": "SirHartley",
+    "version": "1.0.a",
+    "description": "A challenge mod modifying colony income to provide diminishing returns after a cutoff for more sustainable income growth.",
+    "gameVersion": "0.98a",
+    "jars":["jars/src.jar"],
+    "modPlugin":"corruptofficials.plugins.ModPlugin"
+}

@@ -1,0 +1,7 @@
+{
+  #use the ingame lunaSettings to configure the mod.
+
+  "ruleCommandPackages":[
+    "corruptofficials.rules"
+  ]
+}

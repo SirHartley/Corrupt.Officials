@@ -1,0 +1,37 @@
+id,trigger,conditions,script,text,options,notes
+# default entity interaction,,,,,,
+,,,,,,
+LPTitheCheck,BeginFleetEncounter,"$faction.id == luddic_path score:100
+#RepIsAtWorst $faction.id HOSTILE
+!$ignorePlayerCommRequests
+!$LP_tithePaid
+!$LP_titheAskedFor
+#$relativeStrength >= 0
+LPTitheCalc
+!IsSystemTithePaid","$LP_titheConv = true 0
+$LP_titheAskedFor = true 7
+AddText ""You're being hailed by the $faction $otherShipOrFleet."" $faction.baseColor
+$hailing = true 0",,,
+payMegaTitheConfirmSel,DialogOptionSelected,$option == payMegaTitheConfirm,"MakeFactionFleetsInSystemNonHostile luddic_path LP_tithe 100
+SetSystemMemoryKey LP_tithePaid 100
+HA_CMD payMegaTithe
+$entity.LP_tithePaid = true 100
+MakeOtherFleetNonHostile LP_tithe true 100
+AddText ""The connection is cut before you have a chance to respond.""
+ShowDefaultVisual
+EndConversation","""Perhaps your soul is not yet lost to the machine,"" $heOrShe says cheerfully. ""It is possible your sins may be forgiven without the purge of holy fire.""
+OR
+""Truly, Ludd's hand has guided you,"" the Pather says, wiping a tear from $hisOrHer eye.",,
+LPTithePay,DialogOptionSelected,$option == payTithe,"#AddText ""Lost $entity.LP_tithe credits"" textEnemyColor
+AddRemoveCommodity credits -$entity.LP_tithe true
+$entity.LP_tithePaid = true 30
+MakeFactionFleetsInSystemNonHostile luddic_path LP_tithe 30
+SetSystemMemoryKey LP_tithePaid 30
+MakeOtherFleetNonHostile LP_tithe true 30
+$entity.makeNonHostileTakesPriority = true 30
+AddText ""The connection is cut before you have a chance to respond.""
+ShowDefaultVisual
+EndConversation","""Perhaps your soul is not yet lost to the machine.""
+OR
+""Truly, Ludd's hand has guided you.""",,
+,,,,,,
