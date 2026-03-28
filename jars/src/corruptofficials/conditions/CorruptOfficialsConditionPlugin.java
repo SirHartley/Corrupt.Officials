@@ -3,6 +3,7 @@ package corruptofficials.conditions;
 import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.econ.BaseMarketConditionPlugin;
+import corruptofficials.plugins.ModPlugin;
 import corruptofficials.plugins.Settings;
 import corruptofficials.plugins.SettingsListener;
 
@@ -33,10 +34,12 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
         for (Industry industry : market.getIndustries()) {
             totalUpkeep += industry.getUpkeep().getModifiedValue();
         }
+
+        ModPlugin.log("income: " + income + " " + "maxIncomeBeforePenalty: " + maxIncomeBeforePenalty + " "+ "x: " + x + " "+ "incomeAboveCutoff: " + incomeAboveCutoff + " "+ "reduction: " + reduction + " " + "penalty: " + penalty + " " + " red factor " + red);
+      
         float gross = net + totalUpkeep;
-
         if (gross <= 0f) return;
-
+     
         float mult = (gross - creditPenalty) / gross;
         market.getIncomeMult().modifyMult(getModId() + "_corruption", mult, "Corruption");
     }
