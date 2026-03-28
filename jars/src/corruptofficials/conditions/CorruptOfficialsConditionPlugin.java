@@ -32,14 +32,15 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
         float targetIncome = maxIncomeBeforePenalty + incomeAboveCutoff - penalty;
         float actualReductionAbs = income - targetIncome;
 
-        float currentMarketIncomeMult = market.getIncomeMult().getMult(); //the reduction is affected by the overall market income mult so we "remove" it by division
+        float currentMarketIncomeMult = market.getIncomeMult().getModifiedValue(); //the reduction is affected by the overall market income mult so we "remove" it by division
         actualReductionAbs /= currentMarketIncomeMult;
 
         ModPlugin.log("net income: " + income
                 + "\ngross income " + market.getGrossIncome()
                 + "\nmaxIncomeBeforePenalty: " + maxIncomeBeforePenalty
                 + "\nincomeAboveCutoff: " + incomeAboveCutoff
-                + "\npenalty: " + penalty
+                //+ "\nold penalty: " + currentPenalty
+                + "\nnew penalty: " + penalty
                 + "\ntarget income: " + targetIncome
                 + "\npercent income above cutoff that should not exist: " + reduction);
 
