@@ -1,8 +1,8 @@
 package corruptofficials.conditions;
 
-import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.econ.BaseMarketConditionPlugin;
+import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import corruptofficials.plugins.ModPlugin;
 import corruptofficials.plugins.Settings;
 import corruptofficials.plugins.SettingsListener;
@@ -18,30 +18,33 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
     }
 
     public void applyCorruption() {
-        market.getIncomeMult().unmodify(getModId() + "_corruption");
+        market.getIndustry(Industries.POPULATION).getIncome().unmodify(getModId());
 
-        float net = market.getNetIncome();
-        float cutoff = SettingsListener.getInt(Settings.CORRUPTION_CUTOFF);
+        float income = market.getNetIncome();
+        float maxIncomeBeforePenalty = SettingsListener.getInt(Settings.CORRUPTION_CUTOFF);
+        float x = income / maxIncomeBeforePenalty;
 
-        if (net <= cutoff) return;
+        if (x < 1f) return; //income is below threshold
 
-        float x = net / cutoff;
-        float excess = net - cutoff;
-        float reduction = (float) Math.pow(x, SettingsListener.getDouble(Settings.CORRUPTION_POW));
-        float creditPenalty = excess - (excess * reduction);
+        float incomeAboveCutoff = income - maxIncomeBeforePenalty;
+        float reduction = (float) Math.pow(x, SettingsListener.getDouble(Settings.CORRUPTION_POW)); //% of the income above the limit that should not exist
+        float penalty = incomeAboveCutoff - (incomeAboveCutoff * reduction); //credit value that the colony is earning over the target, should be deducted from income
+        float targetIncome = maxIncomeBeforePenalty + incomeAboveCutoff - penalty;
+        float actualReductionAbs = income - targetIncome;
 
-        float totalUpkeep = 0f;
-        for (Industry industry : market.getIndustries()) {
-            totalUpkeep += industry.getUpkeep().getModifiedValue();
-        }
+        float currentMarketIncomeMult = market.getIncomeMult().getMult(); //the reduction is affected by the overall market income mult so we "remove" it by division
+        actualReductionAbs /= currentMarketIncomeMult;
 
-        ModPlugin.log("income: " + income + " " + "maxIncomeBeforePenalty: " + maxIncomeBeforePenalty + " "+ "x: " + x + " "+ "incomeAboveCutoff: " + incomeAboveCutoff + " "+ "reduction: " + reduction + " " + "penalty: " + penalty + " " + " red factor " + red);
-      
-        float gross = net + totalUpkeep;
-        if (gross <= 0f) return;
-     
-        float mult = (gross - creditPenalty) / gross;
-        market.getIncomeMult().modifyMult(getModId() + "_corruption", mult, "Corruption");
+        ModPlugin.log("net income: " + income
+                + "\ngross income " + market.getGrossIncome()
+                + "\nmaxIncomeBeforePenalty: " + maxIncomeBeforePenalty
+                + "\nincomeAboveCutoff: " + incomeAboveCutoff
+                + "\npenalty: " + penalty
+                + "\ntarget income: " + targetIncome
+                + "\npercent income above cutoff that should not exist: " + reduction);
+
+        //flat industry income of industries gets reduced by total income mult so we can't use that for corruption or it'll always be in excess
+        market.getIndustry(Industries.POPULATION).getIncome().modifyFlatAlways(getModId(), -actualReductionAbs, "Government Corruption");
     }
 
     @Override
@@ -49,6 +52,7 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
         super.unapply(id);
         market.getIncomeMult().unmodify(getModId());
         market.getIncomeMult().unmodify(getModId() + "_corruption");
+        market.getIndustry(Industries.POPULATION).getIncome().unmodify(getModId());
     }
 
     @Override
