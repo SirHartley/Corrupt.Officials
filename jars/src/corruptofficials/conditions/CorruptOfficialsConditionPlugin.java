@@ -8,7 +8,6 @@ import corruptofficials.plugins.SettingsListener;
 public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
 
     public static final String ID = "corruptofficials_cond";
-    public static final float CORRUPTION_INCOME_RED_POW = -0.6f;
 
     @Override
     public void apply(String id) {
@@ -25,7 +24,7 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
         if (x < 1f) return;
 
         float incomeAboveCutoff = income - maxIncomeBeforePenalty;
-        float reduction = (float) Math.pow(x, CORRUPTION_INCOME_RED_POW); //% of the income above the limit that should not exist
+        float reduction = (float) Math.pow(x, SettingsListener.getDouble(Settings.CORRUPTION_POW)); //% of the income above the limit that should not exist
         float penalty = incomeAboveCutoff - (incomeAboveCutoff * reduction); //credit value that the colony is earning over the target, should be deducted from income
         float red = (income - penalty) / income;
 

@@ -2,7 +2,8 @@ package corruptofficials.plugins;
 
 public enum Settings {
 
-    CORRUPTION_CUTOFF("corruptofficials_cutoff", FieldType.INT);
+    CORRUPTION_CUTOFF("corruptofficials_cutoff", FieldType.INT),
+    CORRUPTION_POW("corruptofficials_pow", FieldType.DOUBLE);
 
     public enum FieldType { INT, DOUBLE, STRING, BOOLEAN }
 
