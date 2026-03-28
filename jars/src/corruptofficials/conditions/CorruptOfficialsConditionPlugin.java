@@ -2,6 +2,7 @@ package corruptofficials.conditions;
 
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.econ.BaseMarketConditionPlugin;
+import corruptofficials.plugins.Settings;
 import corruptofficials.plugins.SettingsListener;
 
 public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
@@ -18,7 +19,7 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
 
     public void applyCorruption() {
         float income = market.getNetIncome();
-        float maxIncomeBeforePenalty = SettingsListener.getInt(Settings.CORRUPTION_CUTOFF); //todo Claude fix this
+        float maxIncomeBeforePenalty = SettingsListener.getInt(Settings.CORRUPTION_CUTOFF);
         float x = income / maxIncomeBeforePenalty;
 
         if (x < 1f) return;
