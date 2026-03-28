@@ -1,5 +1,6 @@
 package corruptofficials.conditions;
 
+import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.econ.BaseMarketConditionPlugin;
 import corruptofficials.plugins.Settings;
@@ -16,22 +17,28 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
     }
 
     public void applyCorruption() {
-        float income = market.getNetIncome();
-        float maxIncomeBeforePenalty = SettingsListener.getInt(Settings.CORRUPTION_CUTOFF);
-        float x = income / maxIncomeBeforePenalty;
+        market.getIncomeMult().unmodify(getModId() + "_corruption");
 
-        if (x < 1f) return;
+        float net = market.getNetIncome();
+        float cutoff = SettingsListener.getInt(Settings.CORRUPTION_CUTOFF);
 
-        float incomeAboveCutoff = income - maxIncomeBeforePenalty;
-        float reduction = (float) Math.pow(x, SettingsListener.getDouble(Settings.CORRUPTION_POW)); //% of the income above the limit that should not exist
-        float penalty = incomeAboveCutoff - (incomeAboveCutoff * reduction); //credit value that the colony is earning over the target, should be deducted from income
-        float red = (income - penalty) / income;
+        if (net <= cutoff) return;
 
-        //ModPlugin.log("income: " + income + " " + "maxIncomeBeforePenalty: " + maxIncomeBeforePenalty + " "+ "x: " + x + " "+ "incomeAboveCutoff: " + incomeAboveCutoff + " "+ "reduction: " + reduction + " " + "penalty: " + penalty + " " + " red factor " + red);
+        float x = net / cutoff;
+        float excess = net - cutoff;
+        float reduction = (float) Math.pow(x, SettingsListener.getDouble(Settings.CORRUPTION_POW));
+        float creditPenalty = excess - (excess * reduction);
 
-        //can't apply flat red to income directly, thx alex
-        //market.getIndustry(Industries.POPULATION).getIncome().modifyFlat(getModId()+"_corruption", -penalty, "Corruption");
-        market.getIncomeMult().modifyMult(getModId() + "_corruption", red, "Corruption");
+        float totalUpkeep = 0f;
+        for (Industry industry : market.getIndustries()) {
+            totalUpkeep += industry.getUpkeep().getModifiedValue();
+        }
+        float gross = net + totalUpkeep;
+
+        if (gross <= 0f) return;
+
+        float mult = (gross - creditPenalty) / gross;
+        market.getIncomeMult().modifyMult(getModId() + "_corruption", mult, "Corruption");
     }
 
     @Override
