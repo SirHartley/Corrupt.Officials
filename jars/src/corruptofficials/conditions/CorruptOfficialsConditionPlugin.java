@@ -5,6 +5,7 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.econ.BaseMarketConditionPlugin;
 import com.fs.starfarer.api.impl.campaign.econ.impl.PopulationAndInfrastructure;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
+import corruptofficials.compat.AoTDCompat;
 import corruptofficials.plugins.ModPlugin;
 import corruptofficials.plugins.Settings;
 import corruptofficials.plugins.SettingsListener;
@@ -27,7 +28,9 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
 
         population.getIncome().unmodify(getModId());
 
-        float income = market.getNetIncome();
+        float income = AoTDCompat.isEnabled()
+                ? AoTDCompat.getNetIncome(market)
+                : market.getNetIncome();
         float maxIncomeBeforePenalty = SettingsListener.getInt(Settings.CORRUPTION_CUTOFF);
         float x = income / maxIncomeBeforePenalty;
 

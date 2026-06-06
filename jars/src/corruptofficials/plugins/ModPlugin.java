@@ -2,6 +2,7 @@ package corruptofficials.plugins;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
+import corruptofficials.compat.AoTDCompat;
 import corruptofficials.listener.ConditionApplicator;
 import lunalib.lunaSettings.LunaSettings;
 
@@ -25,6 +26,7 @@ public class ModPlugin extends BaseModPlugin {
     public void onGameLoad(boolean newGame) {
         super.onGameLoad(newGame);
 
+        AoTDCompat.reset();
         ConditionApplicator.register();
         ConditionApplicator.applyResourceConditionToAllMarkets();
     }
