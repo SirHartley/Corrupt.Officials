@@ -84,7 +84,7 @@ Evidence: `Market` and `BaseIndustry` on `0.98a-RC8` from the `starsector-knowle
 - Formula: `x = income / cutoff`; nothing below `x = 1`. `kept = x ^ pow` (pow is negative, so 0 to 1); `target = cutoff + (income - cutoff) * kept`; penalty `income - target`, divided by the income mult, added with `modifyFlatAlways(corruptofficials_cond, -penalty, "Government Corruption")` on the population industry's income.
 - The condition goes on every market in the economy, NPC markets included. `decivRemove` drops it on decivilization; the next tick does not add it again because the market leaves the economy.
 - `unapply` also removes income mult modifiers under `<id>` and `<id>_corruption`, which earlier versions used before the penalty moved to flat population income.
-- `getPopulation` takes the industry with id `population`, then the first `PopulationAndInfrastructure` subclass. `unapply` checks that result but then reads `market.getIndustry(Industries.POPULATION)` directly, which is null when only the subclass fallback matched.
+- `getPopulation` takes the industry with id `population`, then the first `PopulationAndInfrastructure` subclass (another mod's population industry under its own id). `applyCorruption` and `unapply` both use its result, so the modifier is added to and removed from the same industry.
 
 ### AoTD compatibility
 
