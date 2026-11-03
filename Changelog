@@ -1,3 +1,7 @@
+1.0.c - UNRELEASED
+Fixed - LunaLib is now listed as a required mod (crashed on startup without it)
+Fixed - Crash when another mod replaces Population & Infrastructure on a colony
+
 1.0.b
 Fixed - Crash if, for whatever reason, a colony does not have population and infrastructure
 

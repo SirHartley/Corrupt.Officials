@@ -23,7 +23,7 @@ Technical routing for the current implementation, checked against game `0.98a-RC
 
 | Registry / hook | Owners |
 |---|---|
-| `mod_info.json` | `modPlugin` `corruptofficials.plugins.ModPlugin`; jar `jars/src.jar`; no `dependencies` (LunaLib is needed anyway, see [settings](#settings)); not `utility` |
+| `mod_info.json` | `modPlugin` `corruptofficials.plugins.ModPlugin`; jar `jars/src.jar`; dependency `lunalib` (see [settings](#settings)); not `utility` |
 | `ModPlugin.onApplicationLoad()` | Adds a `SettingsListener` to LunaLib when `lunalib` is enabled, then `SettingsListener.loadSettings()` |
 | `ModPlugin.onGameLoad()` | `AoTDCompat.reset()`, then `ConditionApplicator.register()` (transient listener), then `ConditionApplicator.applyResourceConditionToAllMarkets()` |
 | `data/campaign/market_conditions.csv` | Condition `corruptofficials_cond` (`Corrupt Officials`), script `corruptofficials.conditions.CorruptOfficialsConditionPlugin`, `decivRemove` `TRUE`, order `1000`. `showIcon()` is false, so it never shows on the planet screen |
@@ -43,7 +43,7 @@ Load order: `onApplicationLoad` (settings) -> `onGameLoad`: `AoTDCompat.reset ->
 | `corruptofficials_cutoff` | Int | `40000` | 500 to 100000 | Monthly net income where the penalty starts |
 | `corruptofficials_pow` | Double | `-0.6` | -2.0 to -0.1 | Exponent of the share of income above the cutoff that is kept |
 
-`SettingsListener` implements LunaLib's `LunaSettingsListener` and imports `LunaSettings`, and `onApplicationLoad` calls `SettingsListener.loadSettings()` whether or not LunaLib is enabled. Loading `SettingsListener` needs LunaLib's classes, so without LunaLib installed the mod fails at application load although `mod_info.json` declares no dependency. A changed setting applies at the market's next condition reapply.
+`SettingsListener` implements LunaLib's `LunaSettingsListener` and imports `LunaSettings`, and `onApplicationLoad` calls `SettingsListener.loadSettings()` whether or not LunaLib is enabled. Loading `SettingsListener` needs LunaLib's classes, so `mod_info.json` declares `lunalib` as a dependency and the launcher will not enable the mod without it. A changed setting applies at the market's next condition reapply.
 
 ### Build and checks
 
@@ -84,7 +84,7 @@ Evidence: `Market` and `BaseIndustry` on `0.98a-RC8` from the `starsector-knowle
 - Formula: `x = income / cutoff`; nothing below `x = 1`. `kept = x ^ pow` (pow is negative, so 0 to 1); `target = cutoff + (income - cutoff) * kept`; penalty `income - target`, divided by the income mult, added with `modifyFlatAlways(corruptofficials_cond, -penalty, "Government Corruption")` on the population industry's income.
 - The condition goes on every market in the economy, NPC markets included. `decivRemove` drops it on decivilization; the next tick does not add it again because the market leaves the economy.
 - `unapply` also removes income mult modifiers under `<id>` and `<id>_corruption`, which earlier versions used before the penalty moved to flat population income.
-- `getPopulation` takes the industry with id `population`, then the first `PopulationAndInfrastructure` subclass. `unapply` checks that result but then reads `market.getIndustry(Industries.POPULATION)` directly, which is null when only the subclass fallback matched.
+- `getPopulation` takes the industry with id `population`, then the first `PopulationAndInfrastructure` subclass (another mod's population industry under its own id). `applyCorruption` and `unapply` both use its result, so the modifier is added to and removed from the same industry.
 
 ### AoTD compatibility
 

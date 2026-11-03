@@ -64,7 +64,7 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
         market.getIncomeMult().unmodify(getModId() + "_corruption");
 
         Industry population = getPopulation();
-        if (population != null) market.getIndustry(Industries.POPULATION).getIncome().unmodify(getModId());
+        if (population != null) population.getIncome().unmodify(getModId());
     }
 
     @Override
