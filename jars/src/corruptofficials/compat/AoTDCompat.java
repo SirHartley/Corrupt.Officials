@@ -52,7 +52,7 @@ public class AoTDCompat {
                                 "AoTD detected but getExpectedMonthlyNetIncomeFromMarket not found");
                         enabled = false;
                     }
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     Global.getLogger(AoTDCompat.class).warn("AoTD detected but class loading failed", e);
                     enabled = false;
                 }
