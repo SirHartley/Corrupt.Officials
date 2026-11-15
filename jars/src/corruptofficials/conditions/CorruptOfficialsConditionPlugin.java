@@ -28,13 +28,16 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
 
         population.getIncome().unmodify(getModId());
 
+        float currentMarketIncomeMult = market.getIncomeMult().getModifiedValue();
+        if (currentMarketIncomeMult <= 0f) return; //penalty / 0 is infinite, infinite * x0 turns all income NaN
+
         float income = AoTDCompat.isEnabled()
                 ? AoTDCompat.getNetIncome(market)
                 : market.getNetIncome();
         float maxIncomeBeforePenalty = SettingsListener.getInt(Settings.CORRUPTION_CUTOFF);
         float x = income / maxIncomeBeforePenalty;
 
-        if (x < 1f) return; //income is below threshold
+        if (!(x >= 1f)) return; //income is below threshold or NaN
 
         float incomeAboveCutoff = income - maxIncomeBeforePenalty;
         float reduction = (float) Math.pow(x, SettingsListener.getDouble(Settings.CORRUPTION_POW)); //% of the income above the limit that should not exist
@@ -42,8 +45,7 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
         float targetIncome = maxIncomeBeforePenalty + incomeAboveCutoff - penalty;
         float actualReductionAbs = income - targetIncome;
 
-        float currentMarketIncomeMult = market.getIncomeMult().getModifiedValue(); //the reduction is affected by the overall market income mult so we "remove" it by division
-        actualReductionAbs /= currentMarketIncomeMult;
+        actualReductionAbs /= currentMarketIncomeMult; //the reduction is affected by the overall market income mult so we "remove" it by division
 
         ModPlugin.log("net income: " + income
                 + "\ngross income " + market.getGrossIncome()
