@@ -6,6 +6,7 @@ import com.fs.starfarer.api.impl.campaign.econ.BaseMarketConditionPlugin;
 import com.fs.starfarer.api.impl.campaign.econ.impl.PopulationAndInfrastructure;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import corruptofficials.compat.AoTDCompat;
+import corruptofficials.compat.SurvivalCompat;
 import corruptofficials.plugins.ModPlugin;
 import corruptofficials.plugins.Settings;
 import corruptofficials.plugins.SettingsListener;
@@ -21,7 +22,7 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
     }
 
     public void applyCorruption() {
-        if (!SettingsListener.getBoolean(Settings.CORRUPTION_ENABLED)) return; //turned off? Leave
+        if (!SurvivalCompat.isCorruptionActive()) return; //turned off or survival mode? Leave
 
         Industry population = getPopulation();
         if (population == null) return;

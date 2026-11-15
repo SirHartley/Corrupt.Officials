@@ -1,6 +1,7 @@
 package corruptofficials.plugins;
 
 import com.fs.starfarer.api.Global;
+import corruptofficials.compat.SurvivalCompat;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
 import org.json.JSONArray;
@@ -57,7 +58,9 @@ public class SettingsListener implements LunaSettingsListener {
 
     @Override
     public void settingsChanged(String modID) {
-        if (MOD_ID.equals(modID)) loadSettings();
+        if (!MOD_ID.equals(modID)) return;
+        loadSettings();
+        SurvivalCompat.updateVanillaCorruption();
     }
 
     public static int getInt(Settings setting)         { return (Integer) cache.getOrDefault(setting.id, 0); }
