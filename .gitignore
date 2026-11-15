@@ -1,3 +1,5 @@
 # Project exclude paths
 /jars/production/
 /jars/src.jar
+/out/
+/jars/release/

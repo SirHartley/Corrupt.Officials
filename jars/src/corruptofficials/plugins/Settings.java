@@ -4,7 +4,8 @@ public enum Settings {
 
     CORRUPTION_CUTOFF("corruptofficials_cutoff", FieldType.INT),
     CORRUPTION_ENABLED("corrputofficials_enabled", FieldType.BOOLEAN),
-    CORRUPTION_POW("corruptofficials_pow", FieldType.DOUBLE);
+    CORRUPTION_POW("corruptofficials_pow", FieldType.DOUBLE),
+    CORRUPTION_REPLACE_SURVIVAL("corruptofficials_replace_survival", FieldType.BOOLEAN);
 
     public enum FieldType { INT, DOUBLE, STRING, BOOLEAN }
 

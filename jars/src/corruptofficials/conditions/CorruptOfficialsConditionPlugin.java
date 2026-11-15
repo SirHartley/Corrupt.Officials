@@ -6,6 +6,7 @@ import com.fs.starfarer.api.impl.campaign.econ.BaseMarketConditionPlugin;
 import com.fs.starfarer.api.impl.campaign.econ.impl.PopulationAndInfrastructure;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import corruptofficials.compat.AoTDCompat;
+import corruptofficials.compat.SurvivalCompat;
 import corruptofficials.plugins.ModPlugin;
 import corruptofficials.plugins.Settings;
 import corruptofficials.plugins.SettingsListener;
@@ -21,12 +22,15 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
     }
 
     public void applyCorruption() {
-        if (!SettingsListener.getBoolean(Settings.CORRUPTION_ENABLED)) return; //turned off? Leave
+        if (!SurvivalCompat.isCorruptionActive()) return; //turned off or survival mode? Leave
 
         Industry population = getPopulation();
         if (population == null) return;
 
         population.getIncome().unmodify(getModId());
+
+        float currentMarketIncomeMult = market.getIncomeMult().getModifiedValue();
+        if (currentMarketIncomeMult <= 0f) return; //penalty / 0 is infinite, infinite * x0 turns all income NaN
 
         float income = AoTDCompat.isEnabled()
                 ? AoTDCompat.getNetIncome(market)
@@ -34,7 +38,7 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
         float maxIncomeBeforePenalty = SettingsListener.getInt(Settings.CORRUPTION_CUTOFF);
         float x = income / maxIncomeBeforePenalty;
 
-        if (x < 1f) return; //income is below threshold
+        if (!(x >= 1f)) return; //income is below threshold or NaN
 
         float incomeAboveCutoff = income - maxIncomeBeforePenalty;
         float reduction = (float) Math.pow(x, SettingsListener.getDouble(Settings.CORRUPTION_POW)); //% of the income above the limit that should not exist
@@ -42,8 +46,7 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
         float targetIncome = maxIncomeBeforePenalty + incomeAboveCutoff - penalty;
         float actualReductionAbs = income - targetIncome;
 
-        float currentMarketIncomeMult = market.getIncomeMult().getModifiedValue(); //the reduction is affected by the overall market income mult so we "remove" it by division
-        actualReductionAbs /= currentMarketIncomeMult;
+        actualReductionAbs /= currentMarketIncomeMult; //the reduction is affected by the overall market income mult so we "remove" it by division
 
         ModPlugin.log("net income: " + income
                 + "\ngross income " + market.getGrossIncome()
@@ -64,7 +67,7 @@ public class CorruptOfficialsConditionPlugin extends BaseMarketConditionPlugin {
         market.getIncomeMult().unmodify(getModId() + "_corruption");
 
         Industry population = getPopulation();
-        if (population != null) market.getIndustry(Industries.POPULATION).getIncome().unmodify(getModId());
+        if (population != null) population.getIncome().unmodify(getModId());
     }
 
     @Override
