@@ -1,8 +1,9 @@
-1.0.c - UNRELEASED
+1.0.c
 Added - Setting to replace the vanilla Survival corruption with this mod
-Adjusted - Off in Survival mode by default (vanilla has its own corruption there)
-Fixed - LunaLib is now listed as a required mod (crashed on startup without it)
-Fixed - Crash when another mod replaces Population & Infrastructure on a colony
+Adjusted - Game version 0.98a -> 0.98.5a
+Adjusted - No longer active in Survival mode (vanilla has its own corruption)
+Fixed - Crash on startup without LunaLib (now a required mod)
+Fixed - Crash when another mod replaces Population & Infrastructure
 Fixed - Colony income showing NaN at 0 stability with AoTD Theory of Toolbox
 
 1.0.b

@@ -11,7 +11,7 @@ How Corrupt.Officials is built, packaged and published. Nothing here runs unless
 | Version file | `corruptofficials.version` | Online Version Checker file on `master`, registered in `data/config/version/version_files.csv`; stamped at packaging, committed back to `master` after a release |
 | Release builder | `jars/src/corruptofficials/tools/ReleaseBuild.java` | `build` and `package`, run with `java <file>` |
 | Builder checks | `jars/src/corruptofficials/tools/ReleaseBuildChecks.java` | Headless checks of changelog parsing, stamping and file filtering |
-| Build libraries | `lib/` | `starfarer.api.jar`, `json.jar`, `log4j-1.2.9.jar`, `lwjgl.jar`, `lwjgl_util.jar` from game `0.98a-RC8` and `LunaLib.jar`, copied from Industrial.Evolution's `lib/` |
+| Build libraries | `lib/` | `starfarer.api.jar` from game `0.98.5a-RC6`, `json.jar`, `log4j-1.2.9.jar`, `lwjgl.jar`, `lwjgl_util.jar` from `0.98a-RC8` (unchanged in 0.98.5a) and `LunaLib.jar`, copied from Industrial.Evolution's `lib/` |
 | Release jar | `jars/release/CorruptOfficials.jar` | Built by `build`, gitignored, runtime classes only; shipped as `jars/src.jar` |
 | Release workflow | `.github/workflows/release.yml` | Manual only: preview without a version, publish with one |
 

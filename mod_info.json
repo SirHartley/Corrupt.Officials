@@ -4,7 +4,7 @@
     "author": "SirHartley",
     "version": "1.0.b",
     "description": "A challenge mod modifying colony income to provide diminishing returns after a cutoff for more sustainable income growth.",
-    "gameVersion": "0.98a",
+    "gameVersion": "0.98.5a-RC6",
     "jars":["jars/src.jar"],
     "modPlugin":"corruptofficials.plugins.ModPlugin",
     "dependencies": [
