@@ -1,6 +1,6 @@
 # Corrupt.Officials
 
-Starsector mod (game `0.98a`), a challenge mod: a hidden market condition on every market in the economy cuts colony income above a cutoff with diminishing returns, as a flat penalty on Population & Infrastructure income. Settings come from LunaLib; AoTD Theory of Toolbox income is used when that mod is enabled.
+Starsector mod (game `0.98.5a`), a challenge mod: a hidden market condition on every market in the economy cuts colony income above a cutoff with diminishing returns, as a flat penalty on Population & Infrastructure income. Off in Survival mode unless a setting makes it replace vanilla Survival corruption. Settings come from LunaLib; AoTD Theory of Toolbox income is used when that mod is enabled.
 
 ## Required workflow
 
@@ -27,6 +27,7 @@ After reading this file, use the task to choose the next document. Read the rele
 | Locate code, trace a feature, change an owner or lifecycle | [ARCHITECTURE.md](docs/ARCHITECTURE.md) before tracing code; follow its owner links. |
 | Change the income penalty, the cutoff or how income is read | [ARCHITECTURE.md](docs/ARCHITECTURE.md#income-penalty), then the vanilla `Market` and `BaseIndustry` code it names. |
 | Change the AoTD compatibility | [ARCHITECTURE.md](docs/ARCHITECTURE.md#aotd-compatibility) |
+| Change how the mod behaves in Survival mode | [ARCHITECTURE.md](docs/ARCHITECTURE.md#survival-mode) |
 | Add or change a setting | [ARCHITECTURE.md](docs/ARCHITECTURE.md#settings) |
 | Write or revise player-facing text (settings help, changelog, mod description, condition name) | [CHANGELOG.md](docs/CHANGELOG.md#wording) for wording; settings help text lives in `data/config/LunaSettings.csv`. |
 | Edit a guide or add documentation | [Documentation upkeep](#documentation-upkeep), the owning guide and its inbound links. |
